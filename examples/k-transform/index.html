@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+  <head>
+    <title>all - transform example</title>
+    <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+  </head>
+  <body class="container">
+    <h1>all - transform</h1>
+    <ul id="test" class="list-unstyled"></ul>
+    <script src="/axios.js"></script>
+    <script>
+        axios.defaults.transformRequest.unshift(
+                function(data, headers){
+                    console.log(data, headers);
+                    data['from'] = 'china';
+                    return data;
+                }
+        );
+        axios.post('/k-transform/server', {
+            you: 'ok'
+        }).then(function (data) {
+                    console.log(data);
+                })
+    </script>
+  </body>
+</html>

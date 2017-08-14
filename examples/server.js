@@ -26,6 +26,11 @@ function listDirs(root) {
 function getIndexTemplate() {
   var links = dirs.map(function (dir) {
     var url = '/' + dir;
+    console.log(dir);
+    if (dir.split('-')[0] && dir.split('-')[0] === 'k') {
+        return '<li onclick="document.location=\'' + url + '\'"><a href="' + url + '">' + '<strong>' + url +　'</strong>' + '</a></li>';
+    }
+
     return '<li onclick="document.location=\'' + url + '\'"><a href="' + url + '">' + url + '</a></li>';
   });
 
@@ -78,6 +83,11 @@ server = http.createServer(function (req, res) {
   var url = req.url;
 
   // Process axios itself
+  if (/axios\.js$/.test(url)) {
+    pipeFileToResponse(res, '../dist/axios.js', 'text/javascript');
+    return;
+  }
+  //....
   if (/axios\.min\.js$/.test(url)) {
     pipeFileToResponse(res, '../dist/axios.min.js', 'text/javascript');
     return;
@@ -105,7 +115,7 @@ server = http.createServer(function (req, res) {
   if (/\/$/.test(url)) {
     url += 'index.html';
   }
-  
+
   // Format request /get -> /get/index.html
   var parts = url.split('/');
   if (dirs.indexOf(parts[parts.length - 1]) > -1) {
@@ -122,7 +132,7 @@ server = http.createServer(function (req, res) {
   }
 
   // Process server request
-  else if (new RegExp('(' + dirs.join('|') + ')\/server').test(url)) {
+  else if (new RegExp('(' + dirs.join('|') + ')\/.*').test(url)) {
     if (fs.existsSync(path.join(__dirname, url + '.js'))) {
       require(path.join(__dirname, url + '.js'))(req, res);
     } else {

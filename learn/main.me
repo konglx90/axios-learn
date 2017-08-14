@@ -1,0 +1,57 @@
+资料
+Ajax知识体系大梳理
+
+vue-resource 的介绍　http://www.cnblogs.com/axl234/p/5899137.html
+vue-resource 的文档　https://github.com/pagekit/vue-resource
+axios 的github地址 https://github.com/mzabriskie/axios
+XMLHttpRequest对象创建
+Vue乱搞系列之axios发起表单请求　http://www.jianshu.com/p/b22d03dfe006
+ajax 跨域请求 vue-resource jsonp跨域　http://blog.csdn.net/liuqing_1/article/details/53858447
+Axios的配置　http://blog.csdn.net/gertYY/article/details/73621899
+传统 Ajax 已死，Fetch 永生
+ES7标准 fetch请求封装
+
+杂记
+观点1: vue-resources不再更新了，vue作者尤大推荐axios
+证据：代码仓库进一年来的commit 主要是修doc和修readme　https://github.com/pagekit/vue-resource/commits/develop?before=a170745073385438e3687f2ea7343fac6030350e+35 https://github.com/vuefe/vuejs.org/issues/186
+
+准备
+
+示例代码，后端服务
+
+目录
+
+简单开场
+
+介绍前端http request的发展,axios的应用，一些实用的配置
+
+ajax xmlHttpRequest的复习
+
+四种做法
+
+自己封装ajax
+使用ajax库
+自己封装fetch
+使用别人封装好的fetch
+
+axios的应用
+
+- Make XMLHttpRequests from the browser
+- Make http requests from node.js
+- Supports the Promise API
+- Intercept request and response
+- Transform request and response data
+- Cancel requests
+- Automatic transforms for JSON data
+- Client side support for protecting against XSRF
+
+vote 的axios配置
+---
+看看
+
+部分功能的源码阅读
+
+一个get请求的实现
+拦截器的实现
+
+拓展axios jsonp的功能，仿vue-resource

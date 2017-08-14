@@ -1,0 +1,149 @@
+
+### 看代码与看小说的对比
+From Where =>　Know　What => Why
+学习英语
+大部分的源码解读需要一定的背景知识
+
+### 小型项目源码阅读(axios)
+---
+#### 远大目标
+
+=> Readme.md description
+=> Promise based HTTP client for the browser and node.js
+=> For Happy
+
+#### 关键依赖
+tip: 如果依赖太多，先关注一些主要的即可
+=> Dependencies
+=>  "follow-redirects": "^1.2.3",
+    "is-buffer": "^1.1.5"
+=> 1. Drop-in replacement for Nodes http and https that automatically follows redirects.
+   2. Determine if an object is a Buffer (including the browserify Buffer)
+#### 入口文件
+=> axio.js
+#### 整体骨架 =>
+create
+#### 一些细节 => ...
+
+
+
+单文件源码阅读(axios.js)
+---
+1. main enter
+2. import xxx => 大致了解import的模块的功能 => 流畅阅读
+3.
+
+### 细节
+
+细节1. 如何同时实现的node与browser可用?
+
+adapters/ 下有两个文件 http.js　和　xhr.js 分别实现了node 和　browser的版本.
+defaults.js里
+
+```js defaults.js
+function getDefaultAdapter() {
+  var adapter;
+  if (typeof XMLHttpRequest !== 'undefined') {
+    // For browsers use XHR adapter
+    adapter = require('./adapters/xhr');
+  } else if (typeof process !== 'undefined') {
+    // For node use HTTP adapter
+    adapter = require('./adapters/http');
+  }
+  return adapter;
+}
+```
+
+
+细节2. axios 标准化了 Content-Type
+
+```js default.js
+'use strict';
+
+var utils = require('../utils');
+
+module.exports = function normalizeHeaderName(headers, normalizedName) {
+  utils.forEach(headers, function processHeader(value, name) {
+    if (name !== normalizedName && name.toUpperCase() === normalizedName.toUpperCase()) {
+      headers[normalizedName] = value;
+      delete headers[name];
+    }
+  });
+};
+
+normalizeHeaderName(headers, 'Content-Type');
+/**
+ K: 标准化 Content-Type，不会出现content-type这种headers
+    BUT实际上:　https://stackoverflow.com/questions/5258977/are-http-headers-case-sensitive
+    Each header field consists of a name followed by a colon (":") and
+    the field value. Field names are case-insensitive.
+    BUT又实际上: 有些后端的http解析服务没有很标准地按http RFC实现
+    一种防御性编程的手段
+    人类都是不安全、不值得信任的，所有的人，都会犯错误，而你写的代码
+    应该考虑到所有可能发生的错误，让你的程序不会因为他人的错误而发生错误
+*/
+```
+
+细节3. 通过默认配置实现Automatic transforms for JSON data
+
+```js
+transformRequest: [function transformRequest(data, headers) {
+  ...
+  if (utils.isObject(data)) {
+    setContentTypeIfUnset(headers, 'application/json;charset=utf-8');
+    return JSON.stringify(data);
+  }
+  return data;
+}],
+
+transformResponse: [function transformResponse(data) {
+  /*eslint no-param-reassign:0*/
+  if (typeof data === 'string') {
+    try {
+      data = JSON.parse(data);
+    } catch (e) { /* Ignore */ }
+  }
+  return data;
+}],
+
+// 调用 dispatchRequest.js
+response.data = transformData(
+  response.data,
+  response.headers,
+  config.transformResponse
+);
+
+```
+
+
+
+### 一些特别的想法
+
+实现jsonp
+通过修改如下代码实现自定义网络异常
+```js defaults.js
+validateStatus: function validateStatus(status) {
+  return status >= 200 && status < 300; // return false;
+}
+
+// enhanceError.js
+console.log(error, config, code, request, response)
+```
+有些配置不可以乱加
+```
+adapter: function myAdapter(config) {
+    return new Promise(function dispatchXhrRequest(resolve, reject){
+      var req = new Request(config.url, {method: config.method, headers: config.headers});
+      fetch(req).then(function(response) {
+        response.json().then(function(data){
+          var response = {};
+          response.data = data;
+          response.headers = config.headers;
+          resolve(response)
+        })
+      }).catch(function(){
+        reject(response)
+      })
+    }, undefined);
+},
+```

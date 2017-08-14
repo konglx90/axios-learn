@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+  <head>
+    <title>axios - get example</title>
+    <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+  </head>
+  <body class="container">
+    <h1>axios.cancel</h1>
+    <ul id="people" class="list-unstyled"></ul>
+
+    <script src="/axios.min.js"></script>
+    <script>
+        var CancelToken = axios.CancelToken;
+        var source = CancelToken.source();
+
+        axios.get('/k-cancel/server', {
+          cancelToken: source.token
+        }).catch(function(thrown) {
+          if (axios.isCancel(thrown)) {
+            console.log('Request canceled', thrown.message);
+          } else {
+            // handle error
+          }
+        });
+
+        // cancel the request (the message parameter is optional)
+        source.cancel('Operation canceled by the user.');
+    </script>
+  </body>
+</html>

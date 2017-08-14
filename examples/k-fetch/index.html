@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+  <head>
+    <title>axios - get example</title>
+    <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+  </head>
+  <body class="container">
+    <h1>axios.fetch</h1>
+    <ul id="test" class="list-unstyled"></ul>
+
+    <script src="/axios.js"></script>
+    <script>
+      axios.get('/k-fetch/server', {
+        adapter: function myAdapter(config) {
+            return new Promise(function dispatchXhrRequest(resolve, reject){
+              var req = new Request(config.url, {method: config.method, headers: config.headers});
+              fetch(req).then(function(response) {
+                response.json().then(function(data){
+                  var response = {};
+                  response.data = data;
+                  response.headers = config.headers;
+                  resolve(response)
+                })
+              }).catch(function(){
+                reject(response)
+              })
+            }, undefined);
+        },
+      }).then(function (response) {
+          console.log(response)
+        })
+        .catch(function (err) {
+          console.log(err);
+        });
+    </script>
+  </body>
+</html>

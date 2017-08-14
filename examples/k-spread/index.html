@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+  <head>
+    <title>all - spread example</title>
+    <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+  </head>
+  <body class="container">
+    <h1>all - spread</h1>
+    <ul id="test" class="list-unstyled"></ul>
+    <script src="/axios.js"></script>
+    <script>
+        function getUserAccount() {
+         return axios.get('/k-spread/account');
+        }
+
+        function getUserPermissions() {
+         return axios.get('/k-spread/server');
+        }
+
+        axios.all([getUserAccount(), getUserPermissions()])
+         .then(axios.spread(function (acct, perms) {
+           // Both requests are now complete
+             console.log(acct, perms)
+        }));
+    </script>
+  </body>
+</html>

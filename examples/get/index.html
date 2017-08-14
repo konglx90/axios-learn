@@ -12,6 +12,7 @@
     <script>
       axios.get('/get/server')
         .then(function (response) {
+          console.log(response)
           document.getElementById('people').innerHTML = response.data.map(function (person) {
             return (
               '<li class="row">' +
