@@ -82,6 +82,11 @@ dirs = listDirs(__dirname);
 server = http.createServer(function (req, res) {
   var url = req.url;
 
+    // Process axios itself
+  if (/polyfill\.js$/.test(url)) {
+    pipeFileToResponse(res, '../dist/polyfill.js', 'text/javascript');
+    return;
+  }
   // Process axios itself
   if (/axios\.js$/.test(url)) {
     pipeFileToResponse(res, '../dist/axios.js', 'text/javascript');

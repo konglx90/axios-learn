@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+  <head>
+    <title>axios - post example</title>
+    <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+  </head>
+  <body class="container">
+    <h1>axios.post</h1>
+
+    <div id="output" class="container"></div>
+    <script src="/polyfill.js"></script>
+    <script src="/axios.min.js"></script>
+
+    <script>
+      (function () {
+          var output = document.getElementById('output');
+          var data = {'key': 'value'};
+          axios.post('/post/server', data, {})
+            .then(function (res) {
+                console.log(res)
+            })
+            .catch(function (err) {
+
+            });
+          //////////
+          axios.post('/post/server', data, {
+              headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded'
+              }
+          })
+            .then(function (res) {
+                    console.log(res)
+            })
+            .catch(function (err) {
+
+            });
+          /////////
+          data = new URLSearchParams();
+          data.append('param1', 'value1');
+          data.append('param2', 'value2');
+          axios.post('/post/server', data, {
+
+          })
+            .then(function (res) {
+                console.log(res)
+            })
+            .catch(function (err) {
+
+            });
+          ////////
+
+      })();
+    </script>
+  </body>
+</html>
