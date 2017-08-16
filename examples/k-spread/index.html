@@ -22,6 +22,12 @@
            // Both requests are now complete
              console.log(acct, perms)
         }));
+        axios.all([getUserAccount(), getUserPermissions()])
+         .then(function (args) {
+             (function (acct, perms) {
+                console.log(acct, perms)
+             })(...args)
+         })
     </script>
   </body>
 </html>
