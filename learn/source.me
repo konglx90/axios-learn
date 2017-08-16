@@ -147,3 +147,12 @@ adapter: function myAdapter(config) {
     }, undefined);
 },
 ```
+
+
+fetch 也有几个坑，相对于XMLHttpRequest来说, fetch还是要底层一些的，
+
+默认不携带cookies
+和promise 一样，一旦发起，无法中断，没有超时，只能等状态变为resolve或者reject,这个需要你封装一下上实现timeout
+fetch请求对某些错误http状态不会reject(400 500)，这个也要自己去封装
+
+所以从易用性来考虑 投票用了axios
